@@ -1,0 +1,25 @@
+# SCA  -- Software Composition Analysis
+# DAST -- Dynamic Application Security Testing
+# SAST -- Static Application Security Testing
+# IAST -- Interactive Application Security Testing
+# 
+name: ZAP integration with Github actions
+on: [push]
+  workflow_dispatch:
+
+jobs:
+  zap_scan:
+    runs-on: ubuntu-latest
+    name: Scan the webapplication
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: master
+      - name: ZAP Scan
+        uses: zaproxy/action-full-scan@v0.10.0
+        with:
+          docker_name: 'ghcr.io/zaproxy/zaproxy:stable'
+          target: 'http://testphp.vulnweb.com/'
+          rules_file_name: '.zap/rules.tsv'
+          cmd_options: '-a'
